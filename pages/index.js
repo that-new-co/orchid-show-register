@@ -3,6 +3,7 @@ import { useSession, signIn } from "next-auth/react";
 
 import DatabaseProvider from "@/database/db-provider";
 
+import Layout from "@/layouts/layout";
 import Exhibitor from "@/components/exhibitor";
 import Trophy from "@/components/trophy";
 import Register from "@/components/register";
@@ -23,39 +24,21 @@ export default function Home() {
 
 	return (
 		<DatabaseProvider user={session?.user}>
-			<main className="flex flex-col items-center justify-start p-8 ">
-				<div className="flex gap-5">
-					<button
-						className="btn btn-primary"
-						onClick={() => setModule("exhibitor")}
-					>
-						Exhibitor
-					</button>
-					<button
-						className="btn btn-primary"
-						onClick={() => setModule("trophy")}
-					>
-						Trophy
-					</button>
-					<button
-						className="btn btn-primary"
-						onClick={() => setModule("register")}
-					>
-						Register
-					</button>
-				</div>
-				{module === "exhibitor" && <Exhibitor setModule={setModule} />}
+			<Layout module={module} setModule={setModule}>
+				<main className="flex flex-col items-center justify-start">
+					{module === "exhibitor" && <Exhibitor setModule={setModule} />}
 
-				{module === "trophy" && <Trophy setModule={setModule} />}
-				{module === "register" && (
-					<Register module={module} setModule={setModule} />
-				)}
-				{!module && (
-					<div className="flex flex-col items-center justify-start p-4 ">
-						<div className="font-bold">No Module</div>
-					</div>
-				)}
-			</main>
+					{module === "trophy" && <Trophy setModule={setModule} />}
+					{module === "register" && (
+						<Register module={module} setModule={setModule} />
+					)}
+					{!module && (
+						<div className="flex flex-col items-center justify-start p-4 ">
+							<div className="font-bold">No Module</div>
+						</div>
+					)}
+				</main>
+			</Layout>
 		</DatabaseProvider>
 	);
 }
