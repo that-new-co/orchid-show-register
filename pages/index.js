@@ -25,7 +25,7 @@ export default function Home() {
 	return (
 		<DatabaseProvider user={session?.user}>
 			<Layout module={module} setModule={setModule}>
-				<main className="flex flex-col items-center justify-start">
+				<main className="flex flex-col items-center justify-start w-full">
 					{module === "exhibitor" && <Exhibitor setModule={setModule} />}
 
 					{module === "trophy" && <Trophy setModule={setModule} />}

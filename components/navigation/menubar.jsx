@@ -7,15 +7,9 @@ const Menubar = ({ module, setModule }) => {
 				className="btn btn-primary btn-sm"
 				onClick={() => setModule("exhibitor")}
 			>
-				Exhibitors
+				Exhibitors & Orchids
 			</button>
 
-			<button
-				className="btn btn-primary btn-sm"
-				onClick={() => setModule("orchid")}
-			>
-				Orchids
-			</button>
 			<button
 				className="btn btn-primary btn-sm"
 				onClick={() => setModule("class")}

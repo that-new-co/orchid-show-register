@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = () => {
 	return (
-		<div className="w-full max-w-5xl navbar bg-base-100">
+		<div className="w-full max-w-7xl navbar bg-base-100">
 			<div className="flex-none">
 				<button className="btn btn-square btn-ghost">
 					<svg
