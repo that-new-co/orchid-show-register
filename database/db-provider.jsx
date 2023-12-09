@@ -2,72 +2,23 @@ import { useEffect } from "react";
 
 import PouchDb from "pouchdb";
 import { Provider } from "use-pouchdb";
-import rel from "relational-pouch";
-
-PouchDb.plugin(require("pouchdb-find"));
-PouchDb.plugin(rel);
-
-const db = new PouchDb("osr_db", { auto_compaction: true });
-
-db.setSchema([
-	{
-		singular: "exhibitor",
-		plural: "exhibitors",
-		relations: {
-			orchids: { hasMany: "orchid" },
-			tables: { hasMany: "table" },
-		},
-	},
-	{
-		singular: "orchid",
-		plural: "orchids",
-		relations: {
-			class: { belongsTo: "class" },
-			table: { belongsTo: "table" },
-			ribbon: { belongsTo: "ribbon" },
-			trophies: { hasMany: "trophy" },
-		},
-	},
-	{
-		singular: "class",
-		plural: "classes",
-		relations: {
-			orchids: { hasMany: "orchid" },
-		},
-	},
-	{
-		singular: "table",
-		plural: "tables",
-		relations: {
-			orchids: { hasMany: "orchid" },
-			trophies: { hasMany: "trophy" },
-		},
-	},
-	{
-		singular: "ribbon",
-		plural: "ribbons",
-		relations: {
-			class: { belongsTo: "class" },
-			orchid: { belongsTo: "orchid" },
-		},
-	},
-	{
-		singular: "trophy",
-		plural: "trophies",
-		relations: {
-			table: { belongsTo: "table" },
-			orchid: { belongsTo: "orchid" },
-		},
-	},
-]);
 
 const db_remote = new PouchDb(
-	"https://apikey-v2-ccvcb2e0adna2wa7a7266w63uzyeid7r6js8nsv9dz1:d0effff001a849e572c0ae0c2485cc3b@b3c6740e-5250-4ac6-b9aa-f7561324f9cd-bluemix.cloudantnosqldb.appdomain.cloud/osr_db_remote"
+	"https://apikey-v2-ccvcb2e0adna2wa7a7266w63uzyeid7r6js8nsv9dz1:d0effff001a849e572c0ae0c2485cc3b@b3c6740e-5250-4ac6-b9aa-f7561324f9cd-bluemix.cloudantnosqldb.appdomain.cloud/osr_remote"
 );
 // IBM Cloudant allows only certain characters in the database name.  lowercase letters, digits, and any of the characters _, $, (, ), +, -, and / are allowed. The database name must begin with a letter
 
-const DatabaseProvider = ({ user, children }) => {
+const DatabaseProvider = ({ db_name, children }) => {
+	const db = new PouchDb(db_name, { auto_compaction: true });
+
 	useEffect(() => {
+		db.get("show_info", function (err, doc) {
+			if (err) {
+				return console.log(err);
+			} else {
+				console.log("[_app] db.get show_info:", doc);
+			}
+		});
 		db.setMaxListeners(20);
 		db.compact()
 			.then(function (result) {

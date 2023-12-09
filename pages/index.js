@@ -2,36 +2,39 @@ import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 
 import DatabaseProvider from "@/database/db-provider";
+import { get, set } from "idb-keyval";
 
 import Layout from "@/layouts/layout";
 import Exhibitor from "@/components/exhibitor";
 import Trophy from "@/components/trophy";
-import Register from "@/components/register";
 
 export default function Home() {
 	const { data: session, status } = useSession();
-	const [user, setUser] = useState();
+	const [osr_info, setOsr_info] = useState();
 
 	useEffect(() => {
-		if (session === null) signIn();
-		if (!session) return;
-		setUser(session.user);
-	}, [session]);
+		get("osr_info").then((osr_info) => {
+			osr_info
+				? setOsr_info(osr_info)
+				: set("osr_info", {
+						db_name: "osr",
+				  }).then((osr_info) => {
+						setOsr_info(osr_info);
+				  });
+		});
+	}, []);
 
 	const [module, setModule] = useState();
 
-	if (!user) return null;
+	if (!osr_info) return null;
 
 	return (
-		<DatabaseProvider user={session?.user}>
+		<DatabaseProvider db_name={osr_info.db_name}>
 			<Layout module={module} setModule={setModule}>
 				<main className="flex flex-col items-center justify-start w-full">
 					{module === "exhibitor" && <Exhibitor setModule={setModule} />}
 
 					{module === "trophy" && <Trophy setModule={setModule} />}
-					{module === "register" && (
-						<Register module={module} setModule={setModule} />
-					)}
 					{!module && (
 						<div className="flex flex-col items-center justify-start p-4 ">
 							<div className="font-bold">No Module</div>

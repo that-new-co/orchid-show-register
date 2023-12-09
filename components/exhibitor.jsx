@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 
 import Orchid from "@/components/exhibitor/orchid";
 
-import { usePouch } from "use-pouchdb";
+import { useAllDocs, usePouch } from "use-pouchdb";
 
 const Exhibitor = () => {
 	const db = usePouch();
+	const osr_data = useAllDocs({
+		include_docs: true,
+		startkey: "1",
+	});
 	const [formData, setFormData] = useState({
-		id: "",
+		_id: "-",
 		type: "",
 		org: "",
 		lname: "",
@@ -28,40 +32,37 @@ const Exhibitor = () => {
 	const [addingOrchid, setAddingOrchid] = useState(false);
 
 	useEffect(() => {
-		db.rel
-			.find("exhibitor")
-			.then((res) => {
-				setExhibitors(res.exhibitors);
-				setOrchids(res.orchids);
-			})
-			.catch((err) => {
-				if (err.status === 404) {
-					setExhibitors([]);
-				}
-			});
-	}, []);
+		console.log("osr_data", osr_data);
+		if (osr_data.length === 0) return;
+		setExhibitors(osr_data.rows.map((row) => row.doc));
+	}, [osr_data]);
 
 	useEffect(() => {
-		console.log("exhibitor", exhibitor);
-		setFormData(exhibitor);
-	}, [exhibitor]);
-
-	useEffect(() => {
+		if (!exhibitors) return;
 		console.log("exhibitors", exhibitors);
-		if (exhibitors.length === 0) {
-			setNextId(1);
-			return;
-		}
-		setNextId(exhibitors[exhibitors.length - 1].id + 1);
 	}, [exhibitors]);
 
-	useEffect(() => {
-		console.log("orchids,", orchids);
-	}, [orchids]);
+	// useEffect(() => {
+	// 	console.log("exhibitor", exhibitor);
+	// 	setFormData(exhibitor);
+	// }, [exhibitor]);
 
-	useEffect(() => {
-		setFormData((prevFormData) => ({ ...prevFormData, id: nextId }));
-	}, [nextId]);
+	// useEffect(() => {
+	// 	console.log("exhibitors", exhibitors);
+	// 	if (exhibitors.length === 0) {
+	// 		setNextId(1);
+	// 		return;
+	// 	}
+	// 	setNextId(exhibitors[exhibitors.length - 1].id + 1);
+	// }, [exhibitors]);
+
+	// useEffect(() => {
+	// 	console.log("orchids,", orchids);
+	// }, [orchids]);
+
+	// useEffect(() => {
+	// 	setFormData((prevFormData) => ({ ...prevFormData, _id: nextId }));
+	// }, [nextId]);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -72,21 +73,20 @@ const Exhibitor = () => {
 		event.preventDefault();
 		console.log("formData:", formData);
 		if (mode === "add") {
-			db.rel
-				.save("exhibitor", {
-					id: nextId,
-					num: formData.num,
-					type: formData.type,
-					org: formData.org,
-					lname: formData.lname,
-					fname: formData.fname,
-					email: formData.email,
-					phone: formData.phone,
-					street: formData.street,
-					city: formData.city,
-					state: formData.state,
-					zip: formData.zip,
-				})
+			db.put({
+				_id: formData._id.toString(),
+				num: formData.num,
+				type: formData.type,
+				org: formData.org,
+				lname: formData.lname,
+				fname: formData.fname,
+				email: formData.email,
+				phone: formData.phone,
+				street: formData.street,
+				city: formData.city,
+				state: formData.state,
+				zip: formData.zip,
+			})
 				.then((res) => {
 					console.log("res", res);
 				})
@@ -107,8 +107,7 @@ const Exhibitor = () => {
 				state: formData.state,
 				zip: formData.zip,
 			};
-			db.rel
-				.save("exhibitor", exhibitorDoc)
+			db.put(exhibitorDoc)
 				.then((res) => {
 					console.log("res", res);
 				})
@@ -117,6 +116,8 @@ const Exhibitor = () => {
 				});
 		}
 	};
+
+	if (!formData) return null;
 
 	return (
 		<div className="flex w-full gap-6">
@@ -180,9 +181,9 @@ const Exhibitor = () => {
 							<span className="pb-1 text-center label-text">ID</span>
 							<input
 								type="text"
-								name="id"
+								name="_id"
 								placeholder="Type here"
-								value={formData.id}
+								value={formData._id}
 								className="w-12 p-2 text-center input input-bordered"
 								autoComplete="off"
 								readOnly
@@ -197,9 +198,7 @@ const Exhibitor = () => {
 								value={formData.type}
 								onChange={handleChange}
 							>
-								<option disabled="disabled" selected="selected">
-									Select
-								</option>
+								<option disabled="disabled">Select</option>
 								<option value="ind">Individual</option>
 								<option value="tab">Table</option>
 							</select>

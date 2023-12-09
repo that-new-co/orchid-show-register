@@ -2,7 +2,7 @@ import React from "react";
 
 const Menubar = ({ module, setModule }) => {
 	return (
-		<div className="flex justify-between w-full gap-5 px-6">
+		<div className="flex justify-between w-full gap-5 px-6 mt-2">
 			<button
 				className="btn btn-primary btn-sm"
 				onClick={() => setModule("exhibitor")}
