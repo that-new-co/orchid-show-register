@@ -7,7 +7,7 @@ import { useDoc, usePouch } from "use-pouchdb";
 
 const Layout = ({ module, setModule, children }) => {
 	const db = usePouch();
-	const { doc, loading, error } = useDoc("show_info");
+	const { doc, loading, error } = useDoc("0");
 	const updating = useRef(false);
 
 	useEffect(() => {
@@ -16,7 +16,7 @@ const Layout = ({ module, setModule, children }) => {
 			console.log("error", error.name);
 			updating.current = true;
 			db.put({
-				_id: "show_info",
+				_id: "0",
 				show_name: "Input Show Name Here",
 			})
 				.then((result) => {

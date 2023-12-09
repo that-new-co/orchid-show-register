@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Orchid from "@/components/exhibitor/orchid";
 
 import { useAllDocs, usePouch } from "use-pouchdb";
+import { set } from "idb-keyval";
 
 const Exhibitor = () => {
 	const db = usePouch();
@@ -35,6 +36,10 @@ const Exhibitor = () => {
 		console.log("osr_data", osr_data);
 		if (osr_data.length === 0) return;
 		setExhibitors(osr_data.rows.map((row) => row.doc));
+		setFormData({
+			...formData,
+			_id: osr_data.rows.length + 1,
+		});
 	}, [osr_data]);
 
 	useEffect(() => {
@@ -42,27 +47,43 @@ const Exhibitor = () => {
 		console.log("exhibitors", exhibitors);
 	}, [exhibitors]);
 
-	// useEffect(() => {
-	// 	console.log("exhibitor", exhibitor);
-	// 	setFormData(exhibitor);
-	// }, [exhibitor]);
+	useEffect(() => {
+		if (!exhibitor) return;
+		setFormData({ formData, ...exhibitor });
+	}, [exhibitor]);
 
-	// useEffect(() => {
-	// 	console.log("exhibitors", exhibitors);
-	// 	if (exhibitors.length === 0) {
-	// 		setNextId(1);
-	// 		return;
-	// 	}
-	// 	setNextId(exhibitors[exhibitors.length - 1].id + 1);
-	// }, [exhibitors]);
-
-	// useEffect(() => {
-	// 	console.log("orchids,", orchids);
-	// }, [orchids]);
-
-	// useEffect(() => {
-	// 	setFormData((prevFormData) => ({ ...prevFormData, _id: nextId }));
-	// }, [nextId]);
+	useEffect(() => {
+		if (mode === "add") {
+			setFormData({
+				formData,
+				_id: osr_data.rows.length + 1,
+				type: "",
+				org: "",
+				lname: "",
+				fname: "",
+				email: "",
+				phone: "",
+				street: "",
+				city: "",
+				state: "",
+				zip: "",
+			});
+		} else if (mode === "edit") {
+			setFormData({
+				_id: exhibitor._id,
+				type: exhibitor.type,
+				org: exhibitor.org,
+				lname: exhibitor.lname,
+				fname: exhibitor.fname,
+				email: exhibitor.email,
+				phone: exhibitor.phone,
+				street: exhibitor.street,
+				city: exhibitor.city,
+				state: exhibitor.state,
+				zip: exhibitor.zip,
+			});
+		}
+	}, [mode]);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
@@ -123,27 +144,36 @@ const Exhibitor = () => {
 		<div className="flex w-full gap-6">
 			<div className="flex flex-col w-1/4 pl-6 my-6 overflow-hidden">
 				<div className="flex flex-col w-full">
-					<div>Exhibitor List</div>
+					<div className="flex flex-row justify-between">
+						<div>Exhibitor List</div>
+						<button
+							className="capitalize btn btn-sm btn-secondary"
+							onClick={() => setMode("add")}
+						>
+							Add
+						</button>
+					</div>
 
 					<div>
 						{exhibitors.map((exhibitor, key) => {
-							return (
-								<div
-									className="flex border"
-									key={key}
-									onClick={() => {
-										setExhibitor(exhibitor);
-										setMode("edit");
-									}}
-								>
-									<div className="p-2 border-r">{exhibitor.id}</div>
-									<div className="p-2">
-										{exhibitor.type === "ind" || exhibitor.org === ""
-											? exhibitor.fname + " " + exhibitor.lname
-											: exhibitor.org}
+							if (exhibitor._id !== "show_info")
+								return (
+									<div
+										className="flex border"
+										key={key}
+										onClick={() => {
+											setExhibitor(exhibitor);
+											setMode("edit");
+										}}
+									>
+										<div className="p-2 border-r">{exhibitor._id}</div>
+										<div className="p-2">
+											{exhibitor.type === "ind" || exhibitor.org === ""
+												? exhibitor.fname + " " + exhibitor.lname
+												: exhibitor.org}
+										</div>
 									</div>
-								</div>
-							);
+								);
 						})}
 					</div>
 				</div>
@@ -169,7 +199,7 @@ const Exhibitor = () => {
 							{mode === "edit" && (
 								<div
 									className="capitalize border-gray-300 btn btn-sm btn-ghost"
-									onClick={() => setAddingOrchid(true)}
+									// onClick={() => setAddingOrchid(true)}
 								>
 									Add Orchid
 								</div>

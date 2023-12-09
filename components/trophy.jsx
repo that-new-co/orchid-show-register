@@ -14,18 +14,18 @@ const Trophy = () => {
 	const [nextId, setNextId] = useState(0);
 	const [trophies, setTrophies] = useState([]);
 
-	useEffect(() => {
-		db.rel
-			.find("trophy")
-			.then((res) => {
-				setTrophies(res.trophies);
-			})
-			.catch((err) => {
-				if (err.status === 404) {
-					setTrophies([]);
-				}
-			});
-	}, []);
+	// useEffect(() => {
+	// 	db.rel
+	// 		.find("trophy")
+	// 		.then((res) => {
+	// 			setTrophies(res.trophies);
+	// 		})
+	// 		.catch((err) => {
+	// 			if (err.status === 404) {
+	// 				setTrophies([]);
+	// 			}
+	// 		});
+	// }, []);
 
 	useEffect(() => {
 		console.log("trophies", trophies);
@@ -61,6 +61,8 @@ const Trophy = () => {
 				console.log("err:", err);
 			});
 	};
+
+	return null;
 
 	return (
 		<>
