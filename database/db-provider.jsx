@@ -12,13 +12,6 @@ const DatabaseProvider = ({ db_name, children }) => {
 	const db = new PouchDb(db_name, { auto_compaction: true });
 
 	useEffect(() => {
-		db.get("show_info", function (err, doc) {
-			if (err) {
-				return console.log(err);
-			} else {
-				console.log("[_app] db.get show_info:", doc);
-			}
-		});
 		db.setMaxListeners(20);
 		db.compact()
 			.then(function (result) {
