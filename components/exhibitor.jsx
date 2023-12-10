@@ -38,7 +38,7 @@ const Exhibitor = () => {
 		setExhibitors(osr_data.rows.map((row) => row.doc));
 		setFormData({
 			...formData,
-			_id: osr_data.rows.length + 1,
+			_id: osr_data.rows.length,
 		});
 	}, [osr_data]);
 
@@ -56,7 +56,7 @@ const Exhibitor = () => {
 		if (mode === "add") {
 			setFormData({
 				formData,
-				_id: osr_data.rows.length + 1,
+				_id: osr_data.rows.length,
 				type: "",
 				org: "",
 				lname: "",
@@ -230,7 +230,8 @@ const Exhibitor = () => {
 							>
 								<option disabled="disabled">Select</option>
 								<option value="ind">Individual</option>
-								<option value="tab">Table</option>
+								<option value="soc">Society</option>
+								<option value="com">Commercial</option>
 							</select>
 						</label>
 

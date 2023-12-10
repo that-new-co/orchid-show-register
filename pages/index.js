@@ -11,6 +11,7 @@ import Trophy from "@/components/trophy";
 export default function Home() {
 	const { data: session, status } = useSession();
 	const [osr_info, setOsr_info] = useState();
+	const [module, setModule] = useState("exhibitor");
 
 	useEffect(() => {
 		get("osr_info").then((osr_info) => {
@@ -23,8 +24,6 @@ export default function Home() {
 				  });
 		});
 	}, []);
-
-	const [module, setModule] = useState();
 
 	if (!osr_info) return null;
 
