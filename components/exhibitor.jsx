@@ -13,16 +13,14 @@ const Exhibitor = () => {
 	});
 	const [formData, setFormData] = useState({
 		_id: "",
+		_rev: "",
 		type: "",
 		org: "",
 		lname: "",
 		fname: "",
 		email: "",
 		phone: "",
-		street: "",
-		city: "",
-		state: "",
-		zip: "",
+		address: "",
 	});
 	const [nextId, setNextId] = useState(1);
 	const [exhibitors, setExhibitors] = useState([]);
@@ -58,31 +56,27 @@ const Exhibitor = () => {
 			setFormData({
 				...formData,
 				_id: +osr_data.rows[osr_data.rows.length - 1].doc._id + 1,
+				_rev: "",
 				type: "",
 				org: "",
 				lname: "",
 				fname: "",
 				email: "",
 				phone: "",
-				street: "",
-				city: "",
-				state: "",
-				zip: "",
+				address: "",
 			});
 		} else if (mode === "edit") {
 			setFormData({
 				...formData,
 				_id: exhibitor._id,
+				_rev: exhibitor._rev,
 				type: exhibitor.type,
 				org: exhibitor.org,
 				lname: exhibitor.lname,
 				fname: exhibitor.fname,
 				email: exhibitor.email,
 				phone: exhibitor.phone,
-				street: exhibitor.street,
-				city: exhibitor.city,
-				state: exhibitor.state,
-				zip: exhibitor.zip,
+				address: exhibitor.address,
 			});
 		}
 	}, [mode]);
@@ -98,6 +92,7 @@ const Exhibitor = () => {
 		if (mode === "add") {
 			db.put({
 				_id: formData._id.toString(),
+				_rev: formData._rev,
 				num: formData.num,
 				type: formData.type,
 				org: formData.org,
@@ -105,10 +100,7 @@ const Exhibitor = () => {
 				fname: formData.fname,
 				email: formData.email,
 				phone: formData.phone,
-				street: formData.street,
-				city: formData.city,
-				state: formData.state,
-				zip: formData.zip,
+				address: formData.address,
 			})
 				.then((res) => {
 					console.log("res", res);
@@ -117,20 +109,7 @@ const Exhibitor = () => {
 					console.log("err", err);
 				});
 		} else if (mode === "edit") {
-			const exhibitorDoc = {
-				...exhibitor,
-				type: formData.type,
-				org: formData.org,
-				lname: formData.lname,
-				fname: formData.fname,
-				email: formData.email,
-				phone: formData.phone,
-				street: formData.street,
-				city: formData.city,
-				state: formData.state,
-				zip: formData.zip,
-			};
-			db.put(exhibitorDoc)
+			db.put(formData)
 				.then((res) => {
 					console.log("res", res);
 				})
@@ -307,31 +286,10 @@ const Exhibitor = () => {
 							<span className="label-text">Address</span>
 							<div className="flex w-full h-12 px-2 border border-gray-300 rounded-lg">
 								<input
-									className="flex w-1/3"
-									name="street"
-									placeholder="street"
-									value={formData.street}
-									onChange={handleChange}
-								/>
-								<input
-									className="flex w-1/3"
-									name="city"
-									placeholder="city"
-									value={formData.city}
-									onChange={handleChange}
-								/>
-								<input
-									className="flex w-1/6"
-									name="state"
-									placeholder="state"
-									value={formData.state}
-									onChange={handleChange}
-								/>
-								<input
-									className="flex w-1/6"
-									name="zip"
-									placeholder="zip"
-									value={formData.zip}
+									className="flex w-full"
+									name="address"
+									placeholder="input single line address"
+									value={formData.address}
 									onChange={handleChange}
 								/>
 							</div>
