@@ -25,6 +25,15 @@ export default function Home() {
 		});
 	}, []);
 
+	useEffect(() => {
+		if (session === undefined) return;
+		if (session === null) {
+			signIn();
+		} else if (session) {
+			console.log("session", session);
+		}
+	}, [session]);
+
 	if (!osr_info) return null;
 
 	return (

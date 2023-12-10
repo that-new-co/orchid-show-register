@@ -12,7 +12,7 @@ const Exhibitor = () => {
 		startkey: "1",
 	});
 	const [formData, setFormData] = useState({
-		_id: "-",
+		_id: "",
 		type: "",
 		org: "",
 		lname: "",
@@ -33,30 +33,31 @@ const Exhibitor = () => {
 	const [addingOrchid, setAddingOrchid] = useState(false);
 
 	useEffect(() => {
+		if (osr_data.rows.length === 0) return;
 		console.log("osr_data", osr_data);
-		if (osr_data.length === 0) return;
 		setExhibitors(osr_data.rows.map((row) => row.doc));
 		setFormData({
 			...formData,
-			_id: osr_data.rows.length,
+			_id: +osr_data.rows[osr_data.rows.length - 1].doc._id + 1,
 		});
 	}, [osr_data]);
 
 	useEffect(() => {
-		if (!exhibitors) return;
+		if (exhibitors.length === 0) return;
 		console.log("exhibitors", exhibitors);
 	}, [exhibitors]);
 
 	useEffect(() => {
 		if (!exhibitor) return;
-		setFormData({ formData, ...exhibitor });
+		setFormData({ ...formData, ...exhibitor });
 	}, [exhibitor]);
 
 	useEffect(() => {
+		if (osr_data.rows.length === 0) return;
 		if (mode === "add") {
 			setFormData({
-				formData,
-				_id: osr_data.rows.length,
+				...formData,
+				_id: +osr_data.rows[osr_data.rows.length - 1].doc._id + 1,
 				type: "",
 				org: "",
 				lname: "",
@@ -70,6 +71,7 @@ const Exhibitor = () => {
 			});
 		} else if (mode === "edit") {
 			setFormData({
+				...formData,
 				_id: exhibitor._id,
 				type: exhibitor.type,
 				org: exhibitor.org,
@@ -138,7 +140,9 @@ const Exhibitor = () => {
 		}
 	};
 
-	if (!formData) return null;
+	if (!formData._id) return null;
+
+	console.log("formData", formData);
 
 	return (
 		<div className="flex w-full gap-6">
@@ -207,36 +211,38 @@ const Exhibitor = () => {
 						</div>
 					</div>
 					<div className="flex items-end justify-center w-full gap-2 px-4 ">
-						<label className="flex flex-col w-fit">
-							<span className="pb-1 text-center label-text">ID</span>
-							<input
-								type="text"
-								name="_id"
-								placeholder="Type here"
-								value={formData._id}
-								className="w-12 p-2 text-center input input-bordered"
-								autoComplete="off"
-								readOnly
-							/>
-						</label>
-						<label className="flex flex-col w-fit">
-							<span className="px-2 pb-1 label-text">Type</span>
-							<select
-								className="p-2 w-28 select select-bordered"
-								placeholder="Select"
-								name="type"
-								value={formData.type}
-								onChange={handleChange}
-							>
-								<option disabled="disabled">Select</option>
-								<option value="ind">Individual</option>
-								<option value="soc">Society</option>
-								<option value="com">Commercial</option>
-							</select>
-						</label>
+						<div className="flex w-1/4 gap-2">
+							<label className="flex flex-col w-1/4">
+								<span className=" label-text">ID</span>
+								<input
+									type="text"
+									name="_id"
+									placeholder="Type here"
+									value={formData._id}
+									className="p-2 text-center input input-bordered"
+									autoComplete="off"
+									readOnly
+								/>
+							</label>
+							<label className="flex flex-col w-3/4">
+								<span className="label-text">Type</span>
+								<select
+									className="p-2 select select-bordered"
+									placeholder="Select"
+									name="type"
+									value={formData.type}
+									onChange={handleChange}
+								>
+									<option disabled="disabled">Select</option>
+									<option value="ind">Individual</option>
+									<option value="soc">Society</option>
+									<option value="com">Commercial</option>
+								</select>
+							</label>
+						</div>
 
-						<label className="flex flex-col flex-grow">
-							<span className="px-2 pb-1 label-text">Organization</span>
+						<label className="flex flex-col w-1/4">
+							<span className="label-text">Organization</span>
 							<input
 								type="text"
 								name="org"
@@ -247,7 +253,7 @@ const Exhibitor = () => {
 								autoComplete="off"
 							/>
 						</label>
-						<label className="flex flex-col flex-grow">
+						<label className="flex flex-col w-1/4">
 							<span className="label-text">Last Name</span>
 							<input
 								type="text"
@@ -259,7 +265,7 @@ const Exhibitor = () => {
 								autoComplete="off"
 							/>
 						</label>
-						<label className="flex flex-col flex-grow">
+						<label className="flex flex-col w-1/4">
 							<span className="label-text">First Name</span>
 							<input
 								type="text"
@@ -273,8 +279,8 @@ const Exhibitor = () => {
 						</label>
 					</div>
 					<div className="flex items-end justify-center w-full gap-2 p-4 ">
-						<label className="flex flex-col flex-grow w-1/4">
-							<span className="px-2 pb-1 label-text">Email</span>
+						<label className="flex flex-col w-1/4">
+							<span className="label-text">Email</span>
 							<input
 								type="email"
 								name="email"
@@ -285,8 +291,8 @@ const Exhibitor = () => {
 								autoComplete="off"
 							/>
 						</label>
-						<label className="flex flex-col flex-grow w-1/5 ">
-							<span className="px-2 pb-1 label-text">Phone Number</span>
+						<label className="flex flex-col w-1/4 ">
+							<span className="label-text">Phone</span>
 							<input
 								type="phone"
 								name="phone"
@@ -297,8 +303,8 @@ const Exhibitor = () => {
 								autoComplete="off"
 							/>
 						</label>
-						<label className="flex flex-col flex-grow ">
-							<span className="px-2 pb-1 label-text">Address</span>
+						<label className="flex flex-col w-1/2">
+							<span className="label-text">Address</span>
 							<div className="flex w-full h-12 px-2 border border-gray-300 rounded-lg">
 								<input
 									className="flex w-1/3"
