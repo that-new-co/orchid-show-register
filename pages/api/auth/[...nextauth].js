@@ -40,7 +40,7 @@ export const authOptions = {
 				user.email === "crykey@gmail.com" ||
 				user.email === "bobb252@gmail.com" ||
 				user.email === "koowee03@bellsouth.net" ||
-				user.email === "koowee033@gmail.com"
+				user.email === "mmatosjp@gmail.com"
 			) {
 				return true;
 			} else {
