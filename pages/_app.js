@@ -18,6 +18,7 @@ export default function App({
 			window.deferredPrompt = event;
 		});
 
+		// May use service worker in the future, to handle cloud sync when online.
 		// if ("serviceWorker" in navigator) {
 		// 	navigator.serviceWorker
 		// 		.register("/service-worker.js")

@@ -32,19 +32,7 @@ export const authOptions = {
 	},
 	callbacks: {
 		async signIn({ user, account, profile, email, credentials }) {
-			if (
-				approved.emails.includes(user.email)
-				// user.email === "chris@thatnewco.com" ||
-				// user.email === "iamchrisblanc@gmail.com" ||
-				// user.email === "thisischrisblanc@gmail.com" ||
-				// user.email === "whoischrisblanc@gmail.com" ||
-				// user.email === "tonyblanc@comcast.net" ||
-				// user.email === "crykey@gmail.com" ||
-				// user.email === "bobb252@gmail.com" ||
-				// user.email === "koowee03@bellsouth.net" ||
-				// user.email === "mmatosjp@gmail.com" ||
-				// user.email === "thisromancebleeds@yahoo.com"
-			) {
+			if (approved.emails.includes(user.email)) {
 				return true;
 			} else {
 				console.log("Unauthorized");

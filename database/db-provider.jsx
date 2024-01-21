@@ -3,10 +3,8 @@ import { useEffect } from "react";
 import PouchDb from "pouchdb";
 import { Provider } from "use-pouchdb";
 
-const db_remote = new PouchDb(
-	"http://localhost:5984/osr_couchdb"
-	// "http://admin:9muidrwFUNsvXfD@localhost:5984/osr_couchdb"
-);
+// While under development, sync with a local CouchDB instance to visualize the data.
+const db_remote = new PouchDb("http://localhost:5984/osr_couchdb");
 
 const DatabaseProvider = ({ db_name, children }) => {
 	const db = new PouchDb(db_name, { auto_compaction: true });

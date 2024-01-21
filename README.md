@@ -1,24 +1,22 @@
 ## Description
 
 Orchid Show Registration and Judging App.
-Stand-alone PWA built with Next.js and PouchDB.
+Stand-alone PWA [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Notes While Under Development
 
-Suggested to install Apache CouchDB, to sync and better visualize PouchDB data.
+Suggested to install Apache CouchDB, to sync with and better visualize PouchDB data.
 Download here: https://couchdb.apache.org/#download
 
 Guide to Setup CouchDB for use with PouchDB:
 https://pouchdb.com/guides/setup-couchdb.html
 
-1. Must Enable CORS in CouchDB to work properly with PouchDB. After installing, open CouchDB through your browser using the url:
-   http://127.0.0.1:5984/_utils/
-   On the left side menu go to Configuration, CORS, and click button to Enable CORS for all domains (or restrict if you wish).
-2. Setup a Server Admin. On the left side menu go to Your Account, then select the Create Server Admin tab, follow directions,
+Open CouchDB through your browser at:
+http://127.0.0.1:5984/_utils/
 
----
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Must Enable CORS in CouchDB to work properly with PouchDB.
+On the left side menu go to Configuration, then CORS.
+Click to Enable CORS for all domains (or restrict if you wish).
 
 ## Getting Started
 
