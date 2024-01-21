@@ -20,7 +20,6 @@
 		"react": "latest",
 		"react-dom": "latest",
 		"react-icons": "^4.12.0",
-		"relational-pouch": "^4.0.4",
 		"use-pouchdb": "^2.0.2"
 	},
 	"devDependencies": {

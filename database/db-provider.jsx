@@ -4,7 +4,8 @@ import PouchDb from "pouchdb";
 import { Provider } from "use-pouchdb";
 
 const db_remote = new PouchDb(
-	"https://apikey-v2-ccvcb2e0adna2wa7a7266w63uzyeid7r6js8nsv9dz1:d0effff001a849e572c0ae0c2485cc3b@b3c6740e-5250-4ac6-b9aa-f7561324f9cd-bluemix.cloudantnosqldb.appdomain.cloud/osr_remote"
+	"http://admin:9muidrwFUNsvXfD@localhost:5984/osr_couchdb"
+	// "https://apikey-v2-ccvcb2e0adna2wa7a7266w63uzyeid7r6js8nsv9dz1:d0effff001a849e572c0ae0c2485cc3b@b3c6740e-5250-4ac6-b9aa-f7561324f9cd-bluemix.cloudantnosqldb.appdomain.cloud/osr_remote"
 );
 // IBM Cloudant allows only certain characters in the database name.  lowercase letters, digits, and any of the characters _, $, (, ), +, -, and / are allowed. The database name must begin with a letter
 
