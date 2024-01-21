@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-// import { useSession, signIn } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 import DatabaseProvider from "@/database/db-provider";
 import { get, set } from "idb-keyval";
@@ -9,7 +9,7 @@ import Exhibitor from "@/components/exhibitor";
 import Trophy from "@/components/trophy";
 
 export default function Home() {
-	// const { data: session, status } = useSession();
+	const { data: session, status } = useSession();
 	const [osr_info, setOsr_info] = useState();
 	const [module, setModule] = useState("exhibitor");
 
@@ -25,14 +25,14 @@ export default function Home() {
 		});
 	}, []);
 
-	// useEffect(() => {
-	// 	if (session === undefined) return;
-	// 	if (session === null) {
-	// 		signIn();
-	// 	} else if (session) {
-	// 		console.log("session", session);
-	// 	}
-	// }, [session]);
+	useEffect(() => {
+		if (session === undefined) return;
+		if (session === null) {
+			signIn();
+		} else if (session) {
+			console.log("session", session);
+		}
+	}, [session]);
 
 	if (!osr_info) return null;
 
