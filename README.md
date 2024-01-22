@@ -2,7 +2,7 @@
 
 Orchid Show Registration and Judging App.
 
-Stand-alone PWA/
+Stand-alone PWA utilizing PouchDB for local data storage.
 
 [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
