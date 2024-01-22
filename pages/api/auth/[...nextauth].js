@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/database/mongodb";
-import { approvedEmails } from "./approved";
+// import { approvedEmails } from "./approved";
 
 export const authOptions = {
 	adapter: MongoDBAdapter(clientPromise),
