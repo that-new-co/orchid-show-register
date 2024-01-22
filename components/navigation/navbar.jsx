@@ -63,7 +63,9 @@ const Navbar = ({ docShowInfo }) => {
 				/>
 			</div>
 			<div className="flex-none">
-				<div className="text-xs">App Version: Multi-User/Online</div>
+				<div className="text-xs">
+					App Version: Single-User / Device Specific
+				</div>
 			</div>
 		</div>
 	);

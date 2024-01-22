@@ -23,12 +23,12 @@ const Menubar = ({ module, setModule }) => {
 				Tables
 			</button>
 
-			<button
+			{/* <button
 				className="btn btn-primary btn-sm"
 				onClick={() => setModule("summary")}
 			>
 				Summary
-			</button>
+			</button> */}
 			<button
 				className="btn btn-primary btn-sm"
 				onClick={() => setModule("summary")}

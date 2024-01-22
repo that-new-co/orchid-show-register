@@ -9,12 +9,9 @@ const Orchid = ({ exhibitor, addingOrchid, setAddingOrchid }) => {
 		class: "",
 		entry: "",
 		space: "",
-		orchid: "",
-		podparent: "",
-		pollenparent: "",
+		name: "",
 		size: "",
 		color: "",
-		exhibitor: exhibitor.id,
 	});
 	const [nextId, setNextId] = useState(1);
 	const [mode, setMode] = useState(addingOrchid ? "add" : "edit");
@@ -27,75 +24,26 @@ const Orchid = ({ exhibitor, addingOrchid, setAddingOrchid }) => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		console.log("formData:", formData);
-		if (mode === "add") {
-			db.rel
-				.save("orchid", {
-					id: formData.id,
-					class: formData.class,
-					entry: formData.entry,
-					space: formData.space,
-					orchid: formData.orchid,
-					podparent: formData.podparent,
-					pollenparent: formData.pollenparent,
-					size: formData.size,
-					color: formData.color,
-					exhibitor: exhibitor.id,
-				})
-				.then((res) => {
-					db.rel.save("exhibitor", {
-						...exhibitor,
-						orchids: [...exhibitor.orchids, res.id],
-					});
-				})
-				.then((res) => {
-					console.log("res", res);
-				})
-				.catch((err) => {
-					console.log("err", err);
-				});
-		} else if (mode === "edit") {
-			const exhibitorDoc = {
-				...exhibitor,
-				type: formData.type,
-				org: formData.org,
-				lname: formData.lname,
-				fname: formData.fname,
-				email: formData.email,
-				phone: formData.phone,
-				street: formData.street,
-				city: formData.city,
-				state: formData.state,
-				zip: formData.zip,
-			};
-			db.rel
-				.save("exhibitor", exhibitorDoc)
-				.then((res) => {
-					console.log("res", res);
-				})
-				.catch((err) => {
-					console.log("err", err);
-				});
-		}
 	};
 
-	useEffect(() => {
-		db.rel
-			.find("orchid")
-			.then((res) => {
-				console.log("res", res);
-				if (res.orchids.length === 0) {
-					setFormData((prevFormData) => ({ ...prevFormData, id: 1 }));
-				} else {
-					setFormData((prevFormData) => ({
-						...prevFormData,
-						id: res.orchids[res.orchids.length - 1].id + 1,
-					}));
-				}
-			})
-			.catch((err) => {
-				console.log("err", err);
-			});
-	}, [exhibitor]);
+	// useEffect(() => {
+	// 	db.rel
+	// 		.find("orchid")
+	// 		.then((res) => {
+	// 			console.log("res", res);
+	// 			if (res.orchids.length === 0) {
+	// 				setFormData((prevFormData) => ({ ...prevFormData, id: 1 }));
+	// 			} else {
+	// 				setFormData((prevFormData) => ({
+	// 					...prevFormData,
+	// 					id: res.orchids[res.orchids.length - 1].id + 1,
+	// 				}));
+	// 			}
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log("err", err);
+	// 		});
+	// }, [exhibitor]);
 
 	useEffect(() => {
 		console.log("orchid.jsx: mode", mode);

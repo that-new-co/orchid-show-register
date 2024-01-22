@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "@/database/mongodb";
-import { approved } from "./approved";
+import { approvedEmails } from "./approved";
 
 export const authOptions = {
 	adapter: MongoDBAdapter(clientPromise),
@@ -32,7 +32,7 @@ export const authOptions = {
 	},
 	callbacks: {
 		async signIn({ user, account, profile, email, credentials }) {
-			if (approved.emails.includes(user.email)) {
+			if (approvedEmails.list.includes(user.email)) {
 				return true;
 			} else {
 				console.log("Unauthorized");

@@ -9,7 +9,7 @@ const Exhibitor = () => {
 	const db = usePouch();
 	const osr_data = useAllDocs({
 		include_docs: true,
-		startkey: "1",
+		startkey: "001",
 	});
 	const [formData, setFormData] = useState({
 		_id: "",
@@ -25,8 +25,7 @@ const Exhibitor = () => {
 	const [nextId, setNextId] = useState(1);
 	const [exhibitors, setExhibitors] = useState([]);
 	const [exhibitor, setExhibitor] = useState({}); // [id, num, type, org, lname, fname, email, phone, street, city, state, zip]
-	const [orchids, setOrchids] = useState([]);
-	const [orchid, setOrchid] = useState({}); // [id, num, type, org, lname, fname, email, phone, street, city, state, zip]
+
 	const [mode, setMode] = useState("add"); // add, edit, delete
 	const [addingOrchid, setAddingOrchid] = useState(false);
 
@@ -34,10 +33,10 @@ const Exhibitor = () => {
 		if (osr_data.rows.length === 0) return;
 		console.log("osr_data", osr_data);
 		setExhibitors(osr_data.rows.map((row) => row.doc));
-		setFormData({
-			...formData,
-			_id: +osr_data.rows[osr_data.rows.length - 1].doc._id + 1,
-		});
+		// setFormData({
+		// 	...formData,
+		// 	_id: +osr_data.rows[osr_data.rows.length - 1].doc._id + 1,
+		// });
 	}, [osr_data]);
 
 	useEffect(() => {
@@ -55,7 +54,9 @@ const Exhibitor = () => {
 		if (mode === "add") {
 			setFormData({
 				...formData,
-				_id: +osr_data.rows[osr_data.rows.length - 1].doc._id + 1,
+				_id: (+osr_data.rows[osr_data.rows.length - 1].doc._id + 1)
+					.toString()
+					.padStart(3, "0"),
 				_rev: "",
 				type: "",
 				org: "",
@@ -119,7 +120,7 @@ const Exhibitor = () => {
 		}
 	};
 
-	if (!formData._id) return null;
+	// if (!formData._id) return null;
 
 	console.log("formData", formData);
 
@@ -133,7 +134,7 @@ const Exhibitor = () => {
 							className="capitalize btn btn-sm btn-secondary"
 							onClick={() => setMode("add")}
 						>
-							Add
+							Add Exhibitor
 						</button>
 					</div>
 
@@ -162,140 +163,147 @@ const Exhibitor = () => {
 				</div>
 			</div>
 			<div className="flex flex-col flex-grow w-3/4 pr-6 my-6">
-				<form
-					className="flex flex-col items-center justify-start w-full border border-gray-300 rounded-md shadow-md "
-					onSubmit={handleSubmit}
-				>
-					<div className="flex justify-between w-full">
-						<div className="flex justify-start w-2/5 p-2 text-xl font-bold capitalize">
-							{mode} Exhibitor
+				{formData._id && (
+					<form
+						className="flex flex-col items-center justify-start w-full border border-gray-300 rounded-md shadow-md "
+						onSubmit={handleSubmit}
+					>
+						<div className="flex justify-between w-full">
+							<div className="flex justify-start w-2/5 p-2 text-xl font-bold capitalize">
+								{!formData.org && !formData.fname && !formData.lname && (
+									<div>Add Info Below</div>
+								)}
+								{formData.org
+									? formData.org
+									: formData.fname + " " + formData.lname}
+							</div>
+							<div className="flex justify-end w-1/5 p-2">
+								<button
+									className="capitalize btn btn-sm btn-secondary"
+									type="submit"
+								>
+									{mode === "edit" ? "Update" : mode}
+								</button>
+							</div>
 						</div>
-						<div className="flex justify-center w-1/5 p-2">
-							<button
-								className="capitalize btn btn-sm btn-secondary"
-								type="submit"
-							>
-								{mode === "edit" ? "Update" : mode}
-							</button>
+						<div className="flex items-end justify-center w-full gap-2 px-4 ">
+							<div className="flex w-1/4 gap-2">
+								<label className="flex flex-col w-1/4">
+									<span className=" label-text">ID</span>
+									<input
+										type="text"
+										name="_id"
+										placeholder="Type here"
+										value={formData._id}
+										className="p-2 text-center input input-bordered"
+										autoComplete="off"
+										readOnly
+									/>
+								</label>
+								<label className="flex flex-col w-3/4">
+									<span className="label-text">Type</span>
+									<select
+										className="p-2 select select-bordered"
+										placeholder="Select"
+										name="type"
+										value={formData.type}
+										onChange={handleChange}
+									>
+										<option disabled="disabled">Select</option>
+										<option value="ind">Individual</option>
+										<option value="soc">Society</option>
+										<option value="com">Commercial</option>
+									</select>
+								</label>
+							</div>
+
+							<label className="flex flex-col w-1/4">
+								<span className="label-text">Organization</span>
+								<input
+									type="text"
+									name="org"
+									placeholder="optional"
+									value={formData.org}
+									onChange={handleChange}
+									className="w-full max-w-xs p-2 input input-bordered"
+									autoComplete="off"
+								/>
+							</label>
+							<label className="flex flex-col w-1/4">
+								<span className="label-text">First Name</span>
+								<input
+									type="text"
+									name="fname"
+									placeholder="required"
+									value={formData.fname}
+									onChange={handleChange}
+									className="w-full max-w-xs p-2 input input-bordered"
+									autoComplete="off"
+								/>
+							</label>
+							<label className="flex flex-col w-1/4">
+								<span className="label-text">Last Name</span>
+								<input
+									type="text"
+									name="lname"
+									placeholder="required"
+									value={formData.lname}
+									onChange={handleChange}
+									className="w-full max-w-xs p-2 input input-bordered"
+									autoComplete="off"
+								/>
+							</label>
 						</div>
-						<div className="flex justify-end w-2/5 p-2 ">
+						<div className="flex items-end justify-center w-full gap-2 p-4 ">
+							<label className="flex flex-col w-1/4">
+								<span className="label-text">Email</span>
+								<input
+									type="email"
+									name="email"
+									placeholder="required"
+									value={formData.email}
+									onChange={handleChange}
+									className="w-full max-w-xs p-2 input input-bordered"
+									autoComplete="off"
+								/>
+							</label>
+							<label className="flex flex-col w-1/4 ">
+								<span className="label-text">Phone</span>
+								<input
+									type="phone"
+									name="phone"
+									placeholder="required"
+									value={formData.phone}
+									onChange={handleChange}
+									className="w-full max-w-xs p-2 input input-bordered"
+									autoComplete="off"
+								/>
+							</label>
+							<label className="flex flex-col w-1/2">
+								<span className="label-text">Address</span>
+								<div className="flex w-full h-12 px-2 border border-gray-300 rounded-lg">
+									<input
+										className="flex w-full"
+										name="address"
+										placeholder="input single line address"
+										value={formData.address}
+										onChange={handleChange}
+									/>
+								</div>
+							</label>
+						</div>
+						<div className="flex justify-center w-2/5 p-2 ">
 							{mode === "edit" && (
 								<div
 									className="capitalize border-gray-300 btn btn-sm btn-ghost"
-									// onClick={() => setAddingOrchid(true)}
+									onClick={() => setAddingOrchid(true)}
 								>
 									Add Orchid
 								</div>
 							)}
 						</div>
-					</div>
-					<div className="flex items-end justify-center w-full gap-2 px-4 ">
-						<div className="flex w-1/4 gap-2">
-							<label className="flex flex-col w-1/4">
-								<span className=" label-text">ID</span>
-								<input
-									type="text"
-									name="_id"
-									placeholder="Type here"
-									value={formData._id}
-									className="p-2 text-center input input-bordered"
-									autoComplete="off"
-									readOnly
-								/>
-							</label>
-							<label className="flex flex-col w-3/4">
-								<span className="label-text">Type</span>
-								<select
-									className="p-2 select select-bordered"
-									placeholder="Select"
-									name="type"
-									value={formData.type}
-									onChange={handleChange}
-								>
-									<option disabled="disabled">Select</option>
-									<option value="ind">Individual</option>
-									<option value="soc">Society</option>
-									<option value="com">Commercial</option>
-								</select>
-							</label>
-						</div>
-
-						<label className="flex flex-col w-1/4">
-							<span className="label-text">Organization</span>
-							<input
-								type="text"
-								name="org"
-								placeholder="optional"
-								value={formData.org}
-								onChange={handleChange}
-								className="w-full max-w-xs p-2 input input-bordered"
-								autoComplete="off"
-							/>
-						</label>
-						<label className="flex flex-col w-1/4">
-							<span className="label-text">Last Name</span>
-							<input
-								type="text"
-								name="lname"
-								placeholder="required"
-								value={formData.lname}
-								onChange={handleChange}
-								className="w-full max-w-xs p-2 input input-bordered"
-								autoComplete="off"
-							/>
-						</label>
-						<label className="flex flex-col w-1/4">
-							<span className="label-text">First Name</span>
-							<input
-								type="text"
-								name="fname"
-								placeholder="required"
-								value={formData.fname}
-								onChange={handleChange}
-								className="w-full max-w-xs p-2 input input-bordered"
-								autoComplete="off"
-							/>
-						</label>
-					</div>
-					<div className="flex items-end justify-center w-full gap-2 p-4 ">
-						<label className="flex flex-col w-1/4">
-							<span className="label-text">Email</span>
-							<input
-								type="email"
-								name="email"
-								placeholder="required"
-								value={formData.email}
-								onChange={handleChange}
-								className="w-full max-w-xs p-2 input input-bordered"
-								autoComplete="off"
-							/>
-						</label>
-						<label className="flex flex-col w-1/4 ">
-							<span className="label-text">Phone</span>
-							<input
-								type="phone"
-								name="phone"
-								placeholder="required"
-								value={formData.phone}
-								onChange={handleChange}
-								className="w-full max-w-xs p-2 input input-bordered"
-								autoComplete="off"
-							/>
-						</label>
-						<label className="flex flex-col w-1/2">
-							<span className="label-text">Address</span>
-							<div className="flex w-full h-12 px-2 border border-gray-300 rounded-lg">
-								<input
-									className="flex w-full"
-									name="address"
-									placeholder="input single line address"
-									value={formData.address}
-									onChange={handleChange}
-								/>
-							</div>
-						</label>
-					</div>
-				</form>
+					</form>
+				)}
 				{addingOrchid && (
 					<Orchid
 						exhibitor={exhibitor}
@@ -304,14 +312,11 @@ const Exhibitor = () => {
 					/>
 				)}
 				<div className="flex flex-col flex-grow w-3/4 pr-6 my-6">
-					{orchids &&
-						orchids.map((orchid, key) => {
-							if (orchid.exhibitor === exhibitor.id)
-								return (
-									<div key={key}>
-										{orchid.id}: {orchid.orchid}
-									</div>
-								);
+					{exhibitor.orchids &&
+						exhibitor.orchids.map((orchid, key) => {
+							<div key={key}>
+								{orchid.id}: {orchid.name}
+							</div>;
 						})}
 				</div>
 			</div>
