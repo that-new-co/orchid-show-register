@@ -20,6 +20,8 @@ Must Enable CORS in CouchDB to work properly with PouchDB.
 On the left side menu go to Configuration, then CORS.
 Click to Enable CORS for all domains (or restrict if you wish).
 
+## Next.js Boilerplate below
+
 ## Getting Started
 
 First, run the development server:

@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
 
 import { usePouch } from "use-pouchdb";
+import { classList } from "@/components/classes/classes";
 
 const Navbar = ({ docShowInfo }) => {
 	const db = usePouch();
+	const classes_db = usePouch("classes_db");
 	const [editShowName, setEditShowName] = useState(false);
 
 	const inputShowNameRef = useRef(null);
@@ -18,6 +20,17 @@ const Navbar = ({ docShowInfo }) => {
 			.catch((error) => {
 				console.log("error", error);
 			});
+	};
+
+	const loadClassList = () => {
+		const cList = classList.map((c) => {
+			return {
+				_id: "c" + c.number.toString().padStart(3, "0"),
+				title: c.title,
+				team: c.team,
+			};
+		});
+		classes_db.bulkDocs(cList);
 	};
 
 	if (!docShowInfo) return null;
@@ -46,9 +59,9 @@ const Navbar = ({ docShowInfo }) => {
 					<li onClick={() => setEditShowName(true)}>
 						<a>Edit Show Name</a>
 					</li>
-					{/* <li>
-						<a>Archive & Reset</a>
-					</li> */}
+					<li onClick={loadClassList}>
+						<a>Load Class List</a>
+					</li>
 				</ul>
 			</div>
 			<div className="flex-1 ml-2">

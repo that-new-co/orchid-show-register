@@ -34,8 +34,8 @@ const Layout = ({ module, setModule, children }) => {
 	if (loading) return <div>Loading...</div>;
 
 	return (
-		<div className="flex flex-col items-center w-screen h-screen overflow-hidden bg-base-200">
-			<div className="flex flex-col items-center w-full h-full border-black max-w-7xl border-x bg-base-100">
+		<div className="flex flex-col items-center w-screen h-screen overflow-hidden bg-base-200 ">
+			<div className="flex flex-col items-center w-full h-full overflow-hidden border-black max-w-7xl border-x bg-base-100 ">
 				<Navbar docShowInfo={doc} />
 				<Menubar module={module} setModule={setModule} />
 				{children}

@@ -5,7 +5,8 @@ import DatabaseProvider from "@/database/db-provider";
 import { get, set } from "idb-keyval";
 
 import Layout from "@/layouts/layout";
-import Exhibitor from "@/components/exhibitor";
+import Register from "@/components/register/_";
+import Classes from "@/components/classes/_";
 import Trophy from "@/components/trophy";
 
 export default function Home() {
@@ -36,15 +37,17 @@ export default function Home() {
 
 	if (!osr_info) return null;
 
+	const modules = ["exhibitor", "class", "trophy"];
+
 	return (
 		<DatabaseProvider db_name={osr_info.db_name}>
 			<Layout module={module} setModule={setModule}>
-				<main className="flex flex-col items-center justify-start w-full">
-					{module === "exhibitor" && <Exhibitor setModule={setModule} />}
-
+				<main className="flex flex-col items-center justify-start w-full h-full overflow-hidden ">
+					{module === "exhibitor" && <Register setModule={setModule} />}
+					{module === "class" && <Classes setModule={setModule} />}
 					{module === "trophy" && <Trophy setModule={setModule} />}
-					{!module && (
-						<div className="flex flex-col items-center justify-start p-4 ">
+					{!modules.includes(module) && (
+						<div className="flex flex-col items-center justify-start h-full p-4 ">
 							<div className="font-bold">No Module</div>
 						</div>
 					)}
