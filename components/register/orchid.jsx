@@ -13,6 +13,11 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 		size: "",
 		color: "",
 	});
+	const [mode, setMode] = useState("view");
+
+	const toggleMode = () => {
+		setMode(mode === "view" ? "edit" : "view");
+	};
 
 	useEffect(() => {
 		setFormData({ ...formData, ...exhibitor.orchids[orchidIndex] });
@@ -34,10 +39,31 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 
 	return (
 		<form
-			className="flex flex-col items-center justify-start w-full gap-4 mb-5 border border-gray-300 rounded-md shadow-md "
+			className={`flex flex-col items-center justify-start w-full gap-4 pt-2 pb-5 border border-gray-300 rounded-md shadow-md ${
+				mode === "edit" && "bg-slate-100"
+			}
+					`}
 			onSubmit={() => handleUpdate(formData)}
 		>
-			<div className="flex items-end justify-center w-full gap-2 px-4 pt-4 ">
+			<div className="flex items-end justify-between w-full px-4">
+				<div className="flex items-center justify-start ">
+					<div className="flex justify-start text-lg font-bold capitalize">
+						{!formData.name && <div>[Orchid Name]</div>}
+						{formData.name}
+					</div>
+				</div>
+
+				<div className="flex items-end " onClick={toggleMode}>
+					<label className="flex gap-2 cursor-pointer label">
+						<span className="label-text">Read</span>
+						<input type="checkbox" className="toggle toggle-success" />
+						<span className={`label-text ${mode === "edit" && "font-bold"}`}>
+							Edit
+						</span>
+					</label>
+				</div>
+			</div>
+			<div className="flex items-end justify-center w-full gap-2 px-4 ">
 				<label className="flex flex-col w-1/6">
 					<span className="px-2 pb-1 text-start label-text">Entry #</span>
 					<input
@@ -59,6 +85,7 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 						value={formData.class}
 						onChange={handleChange}
 						onBlur={() => handleUpdate(formData)}
+						readOnly={mode === "view"}
 					>
 						{classes.map((c) => {
 							return (
@@ -74,16 +101,17 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 					<span className="px-2 pb-1 label-text">Space</span>
 					<input
 						type="text"
-						className="p-2 w-28 select select-bordered"
+						className="p-2 select select-bordered"
 						placeholder="Space #"
 						name="space"
 						value={formData.space}
 						onChange={handleChange}
 						onBlur={() => handleUpdate(formData)}
+						readOnly={mode === "view"}
 					/>
 				</label>
 			</div>
-			<div className="flex items-end justify-center w-full gap-2 px-4 pb-4 ">
+			<div className="flex items-end justify-center w-full gap-2 px-4 ">
 				<label className="flex flex-col flex-grow w-1/2">
 					<span className="px-2 pb-1 label-text">Orchid Name</span>
 					<input
@@ -95,6 +123,7 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 						onBlur={() => handleUpdate(formData)}
 						className="w-full p-2 input input-bordered"
 						autoComplete="off"
+						readOnly={mode === "view"}
 					/>
 				</label>
 				<label className="flex flex-col w-1/4 ">
@@ -108,21 +137,22 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 						onBlur={() => handleUpdate(formData)}
 						className="w-full max-w-xs p-2 input input-bordered"
 						autoComplete="off"
+						readOnly={mode === "view"}
 					/>
 				</label>
 				<label className="flex flex-col w-1/4 ">
 					<span className="px-2 pb-1 label-text">Color</span>
-					<div className="flex w-full h-12 px-2 border border-gray-300 rounded-lg">
-						<input
-							className="flex w-1/3"
-							type="text"
-							name="color"
-							placeholder="required"
-							value={formData.color}
-							onChange={handleChange}
-							onBlur={() => handleUpdate(formData)}
-						/>
-					</div>
+
+					<input
+						className="w-full max-w-xs p-2 input input-bordered"
+						type="text"
+						name="color"
+						placeholder="required"
+						value={formData.color}
+						onChange={handleChange}
+						onBlur={() => handleUpdate(formData)}
+						readOnly={mode === "view"}
+					/>
 				</label>
 			</div>
 		</form>

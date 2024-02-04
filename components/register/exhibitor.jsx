@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import Orchid from "./orchid";
 import OrchidList from "./orchid-list";
 
-import { AiOutlineSave, AiOutlineEdit } from "react-icons/ai";
-
 const Exhibitor = ({
 	exhibitor,
 	orchidIndex,
@@ -46,6 +44,19 @@ const Exhibitor = ({
 		setOrchidIndex(exhibitor.orchids.length - 1);
 	};
 
+	const toggleMode = () => {
+		setMode(mode === "view" ? "edit" : "view");
+	};
+
+	function formatPhoneNumber(phoneNumberString) {
+		var cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+		var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+		if (match) {
+			return "(" + match[1] + ") " + match[2] + "-" + match[3];
+		}
+		return null;
+	}
+
 	if (!formData._id) return null;
 
 	return (
@@ -57,7 +68,7 @@ const Exhibitor = ({
 				onSubmit={(event) => handleUpdate(event, formData)}
 			>
 				<div className="flex justify-between w-full px-4 pt-2">
-					<div className="flex justify-start ">
+					<div className="flex items-center justify-end ">
 						<div className="flex justify-start text-xl font-bold capitalize">
 							{!formData.org && !formData.fname && !formData.lname && (
 								<div>Add Name / Organization</div>
@@ -68,21 +79,17 @@ const Exhibitor = ({
 						</div>
 					</div>
 					<div className="flex justify-start p-2">
-						{mode === "view" && (
-							<div className="flex btn btn-xs" onClick={() => setMode("edit")}>
-								Click to Edit
-								<AiOutlineEdit size={25} />
-							</div>
-						)}
-						{mode === "edit" && (
-							<div
-								type="submit"
-								className="flex btn btn-xs hover:cursor-pointer "
-								onClick={() => setMode("view")}
-							>
-								<AiOutlineSave size={25} /> & View
-							</div>
-						)}
+						<div className="form-control" onClick={toggleMode}>
+							<label className="flex gap-2 cursor-pointer label">
+								<span className="label-text">Read</span>
+								<input type="checkbox" className="toggle toggle-success" />
+								<span
+									className={`label-text ${mode === "edit" && "font-bold"}`}
+								>
+									Edit
+								</span>
+							</label>
+						</div>
 					</div>
 				</div>
 				<div className="flex items-end justify-center w-full gap-2 px-4 ">
