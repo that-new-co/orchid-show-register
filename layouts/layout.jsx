@@ -3,7 +3,7 @@ import { useRef, useEffect } from "react";
 import Navbar from "@/components/navigation/navbar";
 import Menubar from "@/components/navigation/menubar";
 
-import { useDoc, usePouch } from "use-pouchdb";
+import { useDoc, useAllDocs, usePouch } from "use-pouchdb";
 
 const Layout = ({ module, setModule, children }) => {
 	const db = usePouch();

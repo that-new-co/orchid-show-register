@@ -1,7 +1,9 @@
 import { useState, useRef } from "react";
 
+import PouchDb from "pouchdb";
 import { usePouch } from "use-pouchdb";
-import { classList } from "@/components/classes/classes";
+import { classList } from "@/database/classes";
+import { exhibitors } from "@/database/exhibitors";
 
 const Navbar = ({ docShowInfo }) => {
 	const db = usePouch();

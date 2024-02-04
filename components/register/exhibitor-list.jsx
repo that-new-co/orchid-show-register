@@ -5,6 +5,7 @@ const ExhibitorList = ({
 	setExhibitor,
 	addExhibitor,
 	setOrchidIndex,
+	downloadList,
 }) => {
 	return (
 		<div className="flex flex-col overflow-hidden">
@@ -42,6 +43,12 @@ const ExhibitorList = ({
 							);
 					})}
 				</div>
+				<button
+					className="text-sm capitalize btn btn-xs btn-secondary"
+					onClick={downloadList}
+				>
+					Download Exhibitor List
+				</button>
 			</div>
 		</div>
 	);

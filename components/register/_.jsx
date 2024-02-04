@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 
+import { saveAs } from "file-saver";
+
 import ExhibitorList from "./exhibitor-list";
 import Exhibitor from "./exhibitor";
+
+import { startingExhibitors } from "@/database/exhibitors";
 
 import { useAllDocs, usePouch } from "use-pouchdb";
 
@@ -31,6 +35,17 @@ const Register = () => {
 	// setExhibitors after loading docs from Database
 	useEffect(() => {
 		if (rows.length === 0) return;
+		const row_object = {
+			rows: rows,
+		};
+		console.log("rows", rows);
+		console.log("row_object", row_object);
+		// saveAs(
+		// 	new Blob([JSON.stringify(row_object, null, 2)], {
+		// 		type: "application/json",
+		// 	}),
+		// 	"exhibitors.json"
+		// );
 		nextId.current = (+rows[rows.length - 1].doc._id + 1)
 			.toString()
 			.padStart(3, "0");
@@ -38,14 +53,14 @@ const Register = () => {
 	}, [rows]);
 
 	// adds an exhibitor if there are no exhibitors
-	useEffect(() => {
-		if (state === "done") {
-			if (rows.length === 0) {
-				nextId.current = "001";
-				addExhibitor();
-			}
-		}
-	}, [state]);
+	// useEffect(() => {
+	// 	if (state === "done") {
+	// 		if (rows.length === 0) {
+	// 			nextId.current = "001";
+	// 			addExhibitor();
+	// 		}
+	// 	}
+	// }, [state]);
 
 	// selects the first exhibitor on page load
 	useEffect(() => {
@@ -79,6 +94,21 @@ const Register = () => {
 			});
 	};
 
+	const addStarterList = () => {
+		console.log("startingExhibitors");
+		const docs = startingExhibitors.map((exhibitor) => {
+			return exhibitor.doc;
+		});
+		console.log("docs", docs);
+		db.bulkDocs(docs)
+			.then((res) => {
+				console.log("res", res);
+			})
+			.catch((err) => {
+				console.log("err", err);
+			});
+	};
+
 	const update = (exhibitor) => {
 		db.put(exhibitor)
 			.then((res) => {
@@ -91,7 +121,38 @@ const Register = () => {
 			});
 	};
 
-	if (!exhibitor) return null;
+	const downloadList = () => {
+		console.log("exhibitors", exhibitors);
+		const row_object = {
+			rows: rows,
+		};
+		saveAs(
+			new Blob([JSON.stringify(row_object, null, 2)], {
+				type: "application/json",
+			}),
+			"exhibitors.json"
+		);
+	};
+
+	if (!exhibitor)
+		return (
+			<div className="flex w-full gap-8 overflow-hidden">
+				<div className="flex flex-col w-1/4 gap-4 pl-6 my-6 overflow-hidden">
+					<div
+						className="btn"
+						onClick={() => {
+							nextId.current = "001";
+							addExhibitor();
+						}}
+					>
+						Add Exhibitor
+					</div>
+					<div className="btn" onClick={addStarterList}>
+						Add Starter List
+					</div>
+				</div>
+			</div>
+		);
 
 	return (
 		<div className="flex w-full gap-8 overflow-hidden">
@@ -101,6 +162,7 @@ const Register = () => {
 					setExhibitor={setExhibitor}
 					addExhibitor={addExhibitor}
 					setOrchidIndex={setOrchidIndex}
+					downloadList={downloadList}
 				/>
 			</div>
 			<div className="flex flex-col flex-grow w-3/4 gap-4 pr-6 my-6 overflow-hidden">
