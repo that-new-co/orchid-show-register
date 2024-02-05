@@ -6,8 +6,8 @@ import Menubar from "@/components/navigation/menubar";
 import { useDoc, useAllDocs, usePouch } from "use-pouchdb";
 
 const Layout = ({ module, setModule, children }) => {
-	const db = usePouch();
-	const { doc, loading, error } = useDoc("0");
+	const db_info = usePouch("db_info");
+	const { doc, loading, error } = useDoc("info", { db: "db_info" });
 	const updating = useRef(false);
 
 	useEffect(() => {
@@ -15,10 +15,11 @@ const Layout = ({ module, setModule, children }) => {
 		if (error.name === "not_found" && !updating.current) {
 			console.log("error", error.name);
 			updating.current = true;
-			db.put({
-				_id: "0",
-				show_name: "Input Show Name Here",
-			})
+			db_info
+				.put({
+					_id: "info",
+					show_name: "Input Show Name Here",
+				})
 				.then((result) => {
 					console.log("result", result);
 					updating.current = false;

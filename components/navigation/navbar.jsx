@@ -1,13 +1,11 @@
 import { useState, useRef } from "react";
 
-import PouchDb from "pouchdb";
 import { usePouch } from "use-pouchdb";
 import { classList } from "@/database/classes";
-import { exhibitors } from "@/database/exhibitors";
 
 const Navbar = ({ docShowInfo }) => {
 	const db = usePouch();
-	const classes_db = usePouch("classes_db");
+	const db_info = usePouch("db_info");
 	const [editShowName, setEditShowName] = useState(false);
 
 	const inputShowNameRef = useRef(null);
@@ -15,7 +13,8 @@ const Navbar = ({ docShowInfo }) => {
 	const onShowNameChange = () => {
 		setEditShowName(!editShowName);
 		docShowInfo.show_name = inputShowNameRef.current.value;
-		db.put(docShowInfo)
+		db_info
+			.put(docShowInfo)
 			.then((result) => {
 				console.log("result", result);
 			})
@@ -25,14 +24,18 @@ const Navbar = ({ docShowInfo }) => {
 	};
 
 	const loadClassList = () => {
-		const cList = classList.map((c) => {
-			return {
-				_id: "c" + c.number.toString().padStart(3, "0"),
-				title: c.title,
-				team: c.team,
-			};
-		});
-		classes_db.bulkDocs(cList);
+		console.log("classList", classList);
+		db_info
+			.put({
+				_id: "classes",
+				classes: classList,
+			})
+			.then((result) => {
+				console.log("result", result);
+			})
+			.catch((error) => {
+				console.log("error", error);
+			});
 	};
 
 	if (!docShowInfo) return null;

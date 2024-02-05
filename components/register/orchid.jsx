@@ -35,6 +35,16 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 
 	console.log("formData", formData);
 
+	const updateClassName = (classNum) => {
+		const cName = classes.find((c) => c.classNum === classNum);
+		console.log("cName", cName);
+	};
+
+	console.log(
+		"test",
+		classes.find((c) => c.classNum === +formData.class)
+	);
+
 	!formData.entry && <div>Loading...</div>;
 
 	return (
@@ -64,56 +74,8 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 				</div>
 			</div>
 			<div className="flex items-end justify-center w-full gap-2 px-4 ">
-				<label className="flex flex-col w-1/6">
-					<span className="px-2 pb-1 text-start label-text">Entry #</span>
-					<input
-						type="text"
-						name="id"
-						value={formData.entry}
-						className="w-full p-2 text-center input input-bordered"
-						autoComplete="off"
-						readOnly
-					/>
-				</label>
-				<label className="flex flex-col w-2/3 ">
-					<span className="label-text">Class</span>
-
-					<select
-						className="p-2 select select-bordered"
-						placeholder="select"
-						name="class"
-						value={formData.class}
-						onChange={handleChange}
-						onBlur={() => handleUpdate(formData)}
-						readOnly={mode === "view"}
-					>
-						{classes.map((c) => {
-							return (
-								<option key={c._id} value={c._id}>
-									{c._id} - {c.title}
-								</option>
-							);
-						})}
-					</select>
-				</label>
-
-				<label className="flex flex-col w-1/6">
-					<span className="px-2 pb-1 label-text">Space</span>
-					<input
-						type="text"
-						className="p-2 select select-bordered"
-						placeholder="Space #"
-						name="space"
-						value={formData.space}
-						onChange={handleChange}
-						onBlur={() => handleUpdate(formData)}
-						readOnly={mode === "view"}
-					/>
-				</label>
-			</div>
-			<div className="flex items-end justify-center w-full gap-2 px-4 ">
 				<label className="flex flex-col flex-grow w-1/2">
-					<span className="px-2 pb-1 label-text">Orchid Name</span>
+					<span className="px-2 pb-1 label-text">Plant Name</span>
 					<input
 						type="text"
 						name="name"
@@ -126,32 +88,60 @@ const Orchid = ({ exhibitor, orchidIndex, classes, update }) => {
 						readOnly={mode === "view"}
 					/>
 				</label>
-				<label className="flex flex-col w-1/4 ">
-					<span className="px-2 pb-1 label-text">Size</span>
+				<label className="flex flex-col w-1/6">
+					<span className="px-2 pb-1 text-start label-text">Plant #</span>
 					<input
 						type="text"
-						name="size"
-						placeholder="required"
-						value={formData.size}
+						name="entry"
+						placeholder="Plant #"
+						value={formData.entry}
 						onChange={handleChange}
 						onBlur={() => handleUpdate(formData)}
-						className="w-full max-w-xs p-2 input input-bordered"
+						className="w-full p-2 text-center input input-bordered"
 						autoComplete="off"
 						readOnly={mode === "view"}
 					/>
 				</label>
-				<label className="flex flex-col w-1/4 ">
-					<span className="px-2 pb-1 label-text">Color</span>
-
+				<label className="flex flex-col w-1/6">
+					<span className="px-2 pb-1 label-text">Space #</span>
 					<input
-						className="w-full max-w-xs p-2 input input-bordered"
 						type="text"
-						name="color"
-						placeholder="required"
-						value={formData.color}
+						className="w-full p-2 text-center input input-bordered"
+						placeholder="Space #"
+						name="space"
+						value={formData.space}
 						onChange={handleChange}
 						onBlur={() => handleUpdate(formData)}
 						readOnly={mode === "view"}
+					/>
+				</label>
+				<label className="flex flex-col w-1/6">
+					<span className="px-2 pb-1 label-text">Class #</span>
+					<input
+						type="text"
+						className="w-full p-2 text-center input input-bordered"
+						placeholder="Class #"
+						name="class"
+						value={formData.class}
+						onChange={handleChange}
+						onBlur={() => {
+							handleUpdate(formData);
+							updateClassName(formData.class);
+						}}
+						readOnly={mode === "view"}
+					/>
+				</label>
+			</div>
+			<div className="flex items-end justify-center w-full gap-2 px-4 ">
+				<label className="flex flex-col w-full ">
+					<span className="label-text">Class</span>
+
+					<input
+						type="text"
+						className="w-full p-2 text-center input input-bordered"
+						placeholder="Class Name"
+						value={classes.find((c) => c.classNum === +formData.class)?.name}
+						readOnly
 					/>
 				</label>
 			</div>

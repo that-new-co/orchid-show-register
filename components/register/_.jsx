@@ -7,25 +7,24 @@ import Exhibitor from "./exhibitor";
 
 import { startingExhibitors } from "@/database/exhibitors";
 
-import { useAllDocs, usePouch } from "use-pouchdb";
+import { useDoc, useAllDocs, usePouch } from "use-pouchdb";
+import { set } from "idb-keyval";
 
 const Register = () => {
 	const db = usePouch();
 	const { rows, state } = useAllDocs({
 		include_docs: true,
-		startkey: "001",
 	});
-	const classes_db = usePouch("classes_db");
-	const { rows: class_rows, state: class_state } = useAllDocs({
-		db: "classes_db",
-		include_docs: true,
-	});
+	const { doc, loading, error } = useDoc("classes", { db: "db_info" });
 
 	const [classes, setClasses] = useState([]);
 
 	useEffect(() => {
-		if (class_state === "done") setClasses(class_rows.map((row) => row.doc));
-	}, [class_state]);
+		if (loading) return;
+		if (error) return;
+		if (!doc) return;
+		setClasses(doc.classes);
+	}, [doc]);
 
 	const [exhibitors, setExhibitors] = useState([]);
 	const [exhibitor, setExhibitor] = useState(null);
@@ -73,8 +72,9 @@ const Register = () => {
 
 	const addExhibitor = () => {
 		db.put({
-			_id: nextId.current,
+			_id: new Date().toISOString(),
 			_rev: "",
+			num: "",
 			type: "",
 			org: "",
 			lname: "",

@@ -1,31 +1,27 @@
 import { useEffect } from "react";
-import { useAllDocs, usePouch } from "use-pouchdb";
+import { useDoc } from "use-pouchdb";
 
 const ClassesModule = () => {
-	const classes_db = usePouch("classes_db");
-	const { rows, state } = useAllDocs({
-		db: "classes_db",
-		include_docs: true,
-	});
+	const { doc, loading, error } = useDoc("classes", { db: "db_info" });
 
 	useEffect(() => {
-		console.log("classes_db", classes_db);
-		console.log("rows", rows);
-		console.log("state", state);
-	}, [classes_db, rows, state]);
+		console.log("doc", doc);
+		console.log("loading", loading);
+		console.log("error", error);
+	}, [doc, loading, error]);
 
-	if (state.loading) return <div>Loading...</div>;
+	if (loading) return <div>Loading...</div>;
 
 	return (
 		<div className="flex flex-col items-center w-full overflow-hidden">
 			<div className="flex flex-row w-5/6 mt-8 font-bold">CLASS LIST </div>
-			<div className="flex flex-col items-center w-5/6 overflow-auto">
-				{rows.map((row) => {
+			<div className="flex flex-col items-center w-5/6 px-4 overflow-auto">
+				{doc.classes.map((c, index) => {
 					return (
-						<div key={row.id} className="flex flex-row w-full gap-4 ">
-							<div className="flex">{row.doc._id}</div>
-							<div className="flex flex-grow">{row.doc.title}</div>
-							<div className="flex">{row.doc.team}</div>
+						<div key={index} className="flex flex-row w-full gap-4 ">
+							<div className="flex">{c.classNum}</div>
+							<div className="flex flex-grow">{c.name}</div>
+							<div className="flex">{c.team}</div>
 						</div>
 					);
 				})}

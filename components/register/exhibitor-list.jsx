@@ -32,7 +32,7 @@ const ExhibitorList = ({
 										setOrchidIndex();
 									}}
 								>
-									<div className="p-2 border-r">{exhibitor._id}</div>
+									<div className="p-2 border-r">{exhibitor.num}</div>
 
 									<div className="p-2 whitespace-nowrap">
 										{exhibitor.type === "ind" || exhibitor.org === ""

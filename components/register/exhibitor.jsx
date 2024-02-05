@@ -29,10 +29,7 @@ const Exhibitor = ({
 
 	const addOrchid = (exhibitor) => {
 		exhibitor.orchids.push({
-			entry:
-				exhibitor._id +
-				"-" +
-				(exhibitor.orchids.length + 1).toString().padStart(2, "0"),
+			entry: "",
 			type: "",
 			class: "",
 			space: "",
@@ -95,15 +92,17 @@ const Exhibitor = ({
 				<div className="flex items-end justify-center w-full gap-2 px-4 ">
 					<div className="flex w-1/4 gap-2">
 						<label className="flex flex-col w-1/3">
-							<span className=" label-text">EX#</span>
+							<span className=" label-text">#</span>
 							<input
 								type="text"
-								name="_id"
-								placeholder="Type here"
-								value={formData._id}
+								name="num"
+								placeholder="#"
+								value={formData.num}
+								onChange={handleChange}
+								onBlur={(event) => handleUpdate(event, formData)}
 								className="p-2 text-start input input-bordered"
 								autoComplete="off"
-								readOnly
+								readOnly={mode === "view"}
 							/>
 						</label>
 						<label className="flex flex-col w-2/3">
@@ -128,9 +127,9 @@ const Exhibitor = ({
 									onBlur={(event) => handleUpdate(event, formData)}
 								>
 									<option value="">Select</option>
-									<option value="ind">Individual</option>
-									<option value="soc">Society</option>
-									<option value="com">Commercial</option>
+									<option value="Individual">Individual</option>
+									<option value="Society">Society</option>
+									<option value="Commercial">Commercial</option>
 								</select>
 							)}
 						</label>
@@ -210,17 +209,16 @@ const Exhibitor = ({
 					</label>
 					<label className="flex flex-col w-1/2">
 						<span className="label-text">Address</span>
-						<div className="flex w-full h-12 px-2 bg-white border border-gray-300 rounded-lg">
-							<input
-								className="flex w-full"
-								name="address"
-								placeholder="input single line address"
-								value={formData.address}
-								onChange={handleChange}
-								onBlur={(event) => handleUpdate(event, formData)}
-								readOnly={mode === "view"}
-							/>
-						</div>
+
+						<input
+							className="w-full max-w-xs p-2 input input-bordered"
+							name="address"
+							placeholder="input single line address"
+							value={formData.address}
+							onChange={handleChange}
+							onBlur={(event) => handleUpdate(event, formData)}
+							readOnly={mode === "view"}
+						/>
 					</label>
 				</div>
 			</form>
@@ -231,14 +229,14 @@ const Exhibitor = ({
 						onClick={() => addOrchid(formData)}
 					>
 						<div>Add</div>
-						<div>Orchid</div>
+						<div>Plant</div>
 					</div>
 					{exhibitor.orchids.length > 0 && (
 						<div
 							className="flex flex-col w-full bg-white border-gray-300 btn "
 							onClick={() => setOrchidIndex()}
 						>
-							<div>Orchid</div>
+							<div>Plant</div>
 							<div>List</div>
 						</div>
 					)}
@@ -250,7 +248,7 @@ const Exhibitor = ({
 									className="flex flex-col w-full normal-case bg-white border-gray-300 btn "
 									onClick={() => setOrchidIndex(key)}
 								>
-									<div>Entry</div>
+									<div>Plant #</div>
 									<div>{orchid.entry}</div>
 								</div>
 							);
